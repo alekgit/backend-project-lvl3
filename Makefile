@@ -1,7 +1,7 @@
 install: install-deps
 
 run:
-	npx babel-node 'src/bin/page-loader.js'
+	npx babel-node src/bin/page-loader.js --output /var/tmp
 
 install-deps:
 	npm install
