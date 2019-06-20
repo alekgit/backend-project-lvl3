@@ -4,7 +4,12 @@ import path from 'path';
 
 import axios from 'axios';
 
+// const getBasename = line => path.basename(line, path.extname(line));
+
 const generateNameFromLink = (link) => {
+  // const { dir, name, ext } = path.parse(nameBody);
+
+
   const url = new URL(link);
   const { hostname, pathname } = url;
   const separator = /\W/;

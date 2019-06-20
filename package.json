@@ -10,7 +10,10 @@
     "dist"
   ],
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/__tests__/__fixtures__/"
+    ]
   },
   "scripts": {
     "test": "jest",
@@ -45,6 +48,7 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
+    "cheerio": "^1.0.0-rc.3",
     "commander": "^2.20.0",
     "source-map-support": "^0.5.12"
   }
