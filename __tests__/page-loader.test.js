@@ -46,7 +46,7 @@ describe('page loader', () => {
     }
   });
 
-  it('should load page and write file', async () => {
+  it.only('should load page and write file', async () => {
     const pathToFixture = path.join(pathToFixtures, htmlFileName);
     const content = await fs.readFile(pathToFixture, 'utf8');
 
@@ -60,7 +60,7 @@ describe('page loader', () => {
     expect(result).toBe(content); // ?
   });
 
-  it('should load page and resources', async () => {
+  it.only('should load page and resources', async () => {
     /* EXPECTED data block: BEGIN */
 
     const pathToHTMLFile = path.join(pathToFixtures, htmlFileName);
