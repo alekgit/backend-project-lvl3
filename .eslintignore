@@ -1,1 +1,3 @@
 dist
+tmp
+__tests__/__fixtures__

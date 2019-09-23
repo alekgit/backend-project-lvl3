@@ -9,7 +9,7 @@ program
   .version(version)
   .option(
     '-o, --output <path>',
-    'path to output file',
+    'path to directory',
     process.cwd(),
   )
   .arguments('<link>')
