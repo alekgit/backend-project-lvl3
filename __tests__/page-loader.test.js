@@ -1,4 +1,6 @@
-import { promises as fs, unlinkSync, existsSync } from 'fs';
+import {
+  promises as fs, unlinkSync, existsSync, rmdirSync,
+} from 'fs';
 import os from 'os';
 import path from 'path';
 
@@ -21,6 +23,18 @@ const imgFileName = 'images-img_bg_1_gradient.jpg';
 const imgFileName2 = 'images-img_bg_2_gradient.jpg';
 const imgFileName3 = 'images-img_bg_3_gradient.jpg';
 
+const clean = (pathToFile) => {
+  if (existsSync(pathToFile)) {
+    unlinkSync(pathToFile);
+  }
+};
+
+const cleanFolder = (pathToFile) => {
+  if (existsSync(pathToFile)) {
+    rmdirSync(pathToFile);
+  }
+};
+
 it('success', () => {
   expect(true).toBe(true);
 });
@@ -36,32 +50,44 @@ it('async success', async () => {
 });
 
 describe('page loader', () => {
-  const pathToResult = path.join(pathToTempDir, htmlFileName);
+  const pathToResoursesDir = path.join(pathToTempDir, resoursesDirName);
+  const pathToActualHtmlFile = path.join(pathToTempDir, htmlFileName);
+  const pathToActualCssFile = path.join(pathToResoursesDir, cssFileName);
+  const pathToActualJsFile = path.join(pathToResoursesDir, jsFileName);
+  const pathToActualJsFile2 = path.join(pathToResoursesDir, jsFileName2);
+  const pathToActualImgFile = path.join(pathToResoursesDir, imgFileName);
+  const pathToActualImgFile2 = path.join(pathToResoursesDir, imgFileName2);
+  const pathToActualImgFile3 = path.join(pathToResoursesDir, imgFileName3);
+
+  const arr = [
+    pathToActualHtmlFile,
+    pathToActualCssFile,
+    pathToActualJsFile,
+    pathToActualJsFile2,
+    pathToActualImgFile,
+    pathToActualImgFile2,
+    pathToActualImgFile3,
+  ];
 
   beforeEach(() => {
-    if (existsSync(pathToResult)) {
-      unlinkSync(pathToResult);
-    }
+    arr.forEach(p => clean(p));
+    cleanFolder(pathToResoursesDir);
   });
 
   afterEach(() => {
-    if (existsSync(pathToResult)) {
-      unlinkSync(pathToResult);
-    }
+    arr.forEach(p => clean(p));
+    cleanFolder(pathToResoursesDir);
   });
 
   it('should load page and resources', async () => {
     /* EXPECTED data block: BEGIN */
-
     // Вводим responsed type из-за кастомного форматирования cheerio
     const pathToResponseHTMLFile = path.join(pathToFixtures, htmlFileName);
     const responsedHtml = await fs.readFile(pathToResponseHTMLFile, 'utf8');
-    // console.log('----------responsedHtml----------'); console.log(responsedHtml);
 
     const pathToExpectedHTMLFile = path.join(pathToFixtures, expectedHtmlFileName);
     const expectedDirtyHtml = await fs.readFile(pathToExpectedHTMLFile, 'utf8');
     const expectedHtml = expectedDirtyHtml.trim();
-    // console.log('----------expectedHtml----------'); console.log(expectedHtml);
 
     const pathToCSSFile = path.join(pathToFixtures, 'css/style.css');
     const expectedCss = await fs.readFile(pathToCSSFile, 'utf8');
@@ -71,7 +97,6 @@ describe('page loader', () => {
 
     const pathToImgFile = path.join(pathToFixtures, 'images/img_bg_1_gradient.jpg');
     const expectedImg = await fs.readFile(pathToImgFile, 'utf8');
-
     /* EXPECTED data block: END */
 
     nock('http://www.brainjar.com')
@@ -102,27 +127,12 @@ describe('page loader', () => {
     await pageLoader(link, pathToTempDir);
 
     /* ACTUAL data block: BEGIN */
-
-    const pathToActualHtmlFile = path.join(pathToTempDir, htmlFileName);
     const actualHtml = await fs.readFile(pathToActualHtmlFile, 'utf8');
-    // console.log('----------actualHtml----------'); console.log(actualHtml);
-
-    const pathToActualCssFile = path.join(pathToTempDir, resoursesDirName, cssFileName);
     const actualCss = await fs.readFile(pathToActualCssFile, 'utf8');
-
-    const pathToActualJsFile = path.join(pathToTempDir, resoursesDirName, jsFileName);
     const actualJs = await fs.readFile(pathToActualJsFile, 'utf8');
-
-    const pathToActualJsFile2 = path.join(pathToTempDir, resoursesDirName, jsFileName2);
     const actualJs2 = await fs.readFile(pathToActualJsFile2, 'utf8');
-
-    const pathToActualImgFile = path.join(pathToTempDir, resoursesDirName, imgFileName);
     const actualImg = await fs.readFile(pathToActualImgFile, 'utf8');
-
-    const pathToActualImgFile2 = path.join(pathToTempDir, resoursesDirName, imgFileName2);
     const actualImg2 = await fs.readFile(pathToActualImgFile2, 'utf8');
-
-    const pathToActualImgFile3 = path.join(pathToTempDir, resoursesDirName, imgFileName3);
     const actualImg3 = await fs.readFile(pathToActualImgFile3, 'utf8');
     /* ACTUAL data block: END */
 

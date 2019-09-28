@@ -87,7 +87,7 @@ const pageLoader = async (link, outputDir) => {
   const resoursesFolderName = generateResoursesFolderNameFromLink(link);
   const pathToResoursesFolder = path.join(outputDir, resoursesFolderName);
   return fs.access(pathToResoursesFolder, constants.F_OK)
-    .catch(() => fs.mkdir(resoursesFolderName))
+    .catch(() => fs.mkdir(pathToResoursesFolder))
     .then(() => axios.get(link))
     .then(({ data: mainHtmlPageContent }) => {
       const $ = cheerio.load(mainHtmlPageContent);
@@ -148,6 +148,7 @@ const pageLoader = async (link, outputDir) => {
       return promise;
     })
     .catch((e) => {
+      console.log(e);
       throw e;
     });
 };
