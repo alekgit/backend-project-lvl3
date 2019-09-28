@@ -1,7 +1,9 @@
 install: install-deps
 
 run:
-	npx babel-node src/bin/page-loader.js --output ./tmp http://www.brainjar.com/java/host/test.html
+	rm -rf ./tmp/results/
+	mkdir ./tmp/results/
+	npx babel-node src/bin/page-loader.js --output ./tmp/results http://www.brainjar.com/java/host/test.html
 
 run_default:
 	npx babel-node src/bin/page-loader.js
