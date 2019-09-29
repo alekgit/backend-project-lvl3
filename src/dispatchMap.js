@@ -8,27 +8,28 @@ function getRelativeUrl(node, dom) {
   return dom(node).attr(this.attr);
 }
 
-function change(node, dom, p) {
+function setRelativePathToAttr(node, dom, p) {
   return dom(node).attr(this.attr, p);
 }
 
+// -?- знает о cheerio
 export default {
   link: {
     attr: 'href',
     predicate,
     getRelativeUrl,
-    change,
+    setRelativePathToAttr,
   },
   img: {
     attr: 'src',
     predicate,
     getRelativeUrl,
-    change,
+    setRelativePathToAttr,
   },
   script: {
     attr: 'src',
     predicate,
     getRelativeUrl,
-    change,
+    setRelativePathToAttr,
   },
 };

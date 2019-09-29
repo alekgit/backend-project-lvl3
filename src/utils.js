@@ -1,4 +1,7 @@
 import path from 'path';
+// import { URL } from 'url'; // -?-
+
+import dropRight from 'lodash/dropRight'; // -?-
 
 const generateNameFromLocalLink = (localLink) => {
   const separator = /\//;
@@ -32,8 +35,16 @@ const generateResoursesFolderNameFromLink = (link) => {
   return generateNameFromLink(link, nameSuffix);
 };
 
+const generateUrlBaseFromLink = (link) => {
+  const { origin, pathname } = new URL(link);
+  const pn = dropRight(pathname.split('/').filter(p => p !== ''), 1).join('/');
+  const { href } = new URL(pn, origin);
+  return href;
+};
+
 export {
   generateNameFromLocalLink,
   generateHtmlFileNameFromLink,
   generateResoursesFolderNameFromLink,
+  generateUrlBaseFromLink,
 };

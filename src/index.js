@@ -1,21 +1,20 @@
 import { promises as fs, constants } from 'fs';
-import { URL } from 'url';
 import path from 'path';
 
 import axios from 'axios';
 import cheerio from 'cheerio';
-import dropRight from 'lodash/dropRight'; // -?-
 import zipWith from 'lodash/zipWith'; // -?-
 
 import {
   generateNameFromLocalLink,
   generateHtmlFileNameFromLink,
   generateResoursesFolderNameFromLink,
+  generateUrlBaseFromLink,
 } from './utils';
 
-import t from './dispatchMap';
+import t from './dispatchMap'; // -?-
 
-let inner;
+let nodes;
 
 const pageLoader = async (link, outputDir) => {
   const resoursesFolderName = generateResoursesFolderNameFromLink(link);
@@ -33,17 +32,10 @@ const pageLoader = async (link, outputDir) => {
       const localNames = relativeUrls.map(generateNameFromLocalLink);
       const relativePaths = localNames.map(name => path.join(resoursesFolderName, name));
       const absolutePaths = relativePaths.map(relativePath => path.join(outputDir, relativePath));
+      const urlBase = generateUrlBaseFromLink(link);
+      const absoluteUrls = relativeUrls.map(p => [urlBase, p].join('/'));
 
-      const { origin, pathname } = new URL(link);
-      const pn = dropRight(pathname.split('/').filter(p => p !== ''), 1).join('/');
-      const newUrl = new URL(pn, origin);
-      const { href: urlBase } = newUrl;
-      const absoluteUrls = relativeUrls.map((p) => {
-        const url = [urlBase, p].join('/');
-        return url;
-      });
-
-      inner = zipWith(
+      nodes = zipWith(
         filteredHtmlNodes, absoluteUrls, absolutePaths, relativePaths,
         (
           htmlNode, absoluteUrl, absolutePath, relativePath,
@@ -52,37 +44,33 @@ const pageLoader = async (link, outputDir) => {
         }),
       );
 
-      const resoursesContent = inner.map(
+      const resoursesContentPromises = nodes.map(
         resourse => axios.get(resourse.absoluteUrl)
-          .then(({ data: resourseContent }) => {
-            resourse.content = resourseContent; // -?-
-            return resourseContent;
+          .then(({ data: resourseContent }) => { // -?-
+            resourse.content = resourseContent; // eslint-disable-line no-param-reassign
           }),
       );
 
-      inner.forEach(({ htmlNode, relativePath }) => {
-        t[htmlNode.name].change(htmlNode, $, relativePath);
+      nodes.forEach(({ htmlNode, relativePath }) => {
+        t[htmlNode.name].setRelativePathToAttr(htmlNode, $, relativePath);
       });
 
       const htmlFileName = generateHtmlFileNameFromLink(link);
       const absolutePathToHtmlFile = path.join(outputDir, htmlFileName);
-      inner.push({
+      nodes.push({
         htmlNode: $('root'), // -?-
         absoluteUrl: link,
         absolutePath: absolutePathToHtmlFile,
         content: $.html(),
       });
 
-      const promise = Promise.all(resoursesContent);
-      return promise;
+      return Promise.all(resoursesContentPromises);
     })
     .then(() => {
-      const writeFilePromises = inner.map(node => fs.writeFile(node.absolutePath, node.content));
-      const promise = Promise.all(writeFilePromises);
-      return promise;
+      const writeFilePromises = nodes.map(node => fs.writeFile(node.absolutePath, node.content));
+      return Promise.all(writeFilePromises);
     })
     .catch((e) => {
-      console.log(e);
       throw e;
     });
 };

@@ -21,4 +21,3 @@ rules:
   no-console: 0
   lodash-fp/use-fp: 0
   lodash-fp/no-extraneous-args: 0
-  no-param-reassign: 0
