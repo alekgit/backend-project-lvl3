@@ -5,7 +5,6 @@ import os from 'os';
 import path from 'path';
 
 import nock from 'nock';
-import axios from 'axios';
 
 import pageLoader from '../src';
 
@@ -34,20 +33,6 @@ const cleanFolder = (pathToFile) => {
     rmdirSync(pathToFile);
   }
 };
-
-it('success', () => {
-  expect(true).toBe(true);
-});
-
-it('async success', async () => {
-  nock('http://www.brainjar.com/')
-    .get('/java/host/test.html')
-    .reply(201);
-
-  const response = await axios.get(link);
-  const { status } = response;
-  expect(status).toBe(201);
-});
 
 describe('page loader', () => {
   const pathToResoursesDir = path.join(pathToTempDir, resoursesDirName);

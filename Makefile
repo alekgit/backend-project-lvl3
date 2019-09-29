@@ -3,7 +3,7 @@ install: install-deps
 run:
 	rm -rf ./tmp/results/
 	mkdir ./tmp/results/
-	npx babel-node src/bin/page-loader.js --output ./tmp/results http://www.brainjar.com/java/host/test.html
+	DEBUG='page-loader,page-loder:*' npx babel-node src/bin/page-loader.js --output ./tmp/results http://www.brainjar.com/java/host/test.html
 
 run_default:
 	npx babel-node src/bin/page-loader.js
@@ -17,6 +17,9 @@ build:
 
 test:
 	npm test
+
+watch-test:
+	DEBUG='page-loader,page-loader:*' npx jest --watch -o
 
 test-coverage:
 	npm test -- --coverage

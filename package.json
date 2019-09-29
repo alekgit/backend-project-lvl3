@@ -16,7 +16,7 @@
     ]
   },
   "scripts": {
-    "test": "jest",
+    "test": "DEBUG=page-loader,page-loader:* jest",
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "prepublishOnly": "npm run build"
   },
@@ -50,6 +50,7 @@
     "axios": "^0.19.0",
     "cheerio": "^1.0.0-rc.3",
     "commander": "^2.20.0",
+    "debug": "^4.1.1",
     "is-relative-url": "^3.0.0",
     "lodash": "^4.17.15",
     "source-map-support": "^0.5.13"

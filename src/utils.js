@@ -8,8 +8,8 @@ const generateNameFromLocalLink = (localLink) => {
   const { dir, base } = path.parse(localLink);
   const dirParts = dir.split(separator)
     .filter(part => part.trim() !== '');
-  const res = [...dirParts, base].join('-');
-  return res;
+  const result = [...dirParts, base].join('-');
+  return result;
 };
 
 const generateNameFromLink = (link, nameSuffix = '') => {

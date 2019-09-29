@@ -1,4 +1,8 @@
 import isRelativeUrl from 'is-relative-url';
+import debug from 'debug';
+
+const d = debug('page-loader:dispatchMap');
+d('initializing...');
 
 function predicate(node, dom) {
   return isRelativeUrl(dom(node).attr(this.attr));
@@ -33,3 +37,5 @@ export default {
     setRelativePathToAttr,
   },
 };
+
+d('done!');
