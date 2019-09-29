@@ -77,8 +77,8 @@ const pageLoader = async (link, outputDir) => {
       return promise;
     })
     .then(() => {
-      const arrForWrite = inner.map(node => fs.writeFile(node.absolutePath, node.content));
-      const promise = Promise.all(arrForWrite);
+      const writeFilePromises = inner.map(node => fs.writeFile(node.absolutePath, node.content));
+      const promise = Promise.all(writeFilePromises);
       return promise;
     })
     .catch((e) => {
