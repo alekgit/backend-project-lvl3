@@ -55,12 +55,12 @@ describe('page loader', () => {
   ];
 
   beforeEach(() => {
-    arr.forEach(p => clean(p));
+    arr.forEach((p) => clean(p));
     cleanFolder(pathToResoursesDir);
   });
 
   afterEach(() => {
-    arr.forEach(p => clean(p));
+    arr.forEach((p) => clean(p));
     cleanFolder(pathToResoursesDir);
   });
 

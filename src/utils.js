@@ -7,7 +7,7 @@ const generateNameFromLocalLink = (localLink) => {
   const separator = /\//;
   const { dir, base } = path.parse(localLink);
   const dirParts = dir.split(separator)
-    .filter(part => part.trim() !== '');
+    .filter((part) => part.trim() !== '');
   const result = [...dirParts, base].join('-');
   return result;
 };
@@ -19,7 +19,7 @@ const generateNameFromLink = (link, nameSuffix = '') => {
   const parts = [
     ...hostname.split(separator),
     ...pathname.split(separator),
-  ].filter(part => part.trim() !== '');
+  ].filter((part) => part.trim() !== '');
   const nameBody = parts.join('-');
   const result = `${nameBody}${nameSuffix}`;
   return result;
@@ -37,7 +37,7 @@ const generateResoursesFolderNameFromLink = (link) => {
 
 const generateUrlBaseFromLink = (link) => {
   const { origin, pathname } = new URL(link);
-  const pn = dropRight(pathname.split('/').filter(p => p !== ''), 1).join('/');
+  const pn = dropRight(pathname.split('/').filter((p) => p !== ''), 1).join('/');
   const { href } = new URL(pn, origin);
   return href;
 };

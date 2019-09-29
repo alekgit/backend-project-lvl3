@@ -36,10 +36,10 @@ const pageLoader = async (link, outputDir) => {
       const relativeUrls = filteredTags
         .map((_i, elem) => t[elem.name].getRelativeUrl(elem, $)).get();
       const localNames = relativeUrls.map(generateNameFromLocalLink);
-      const relativePaths = localNames.map(name => path.join(resoursesFolderName, name));
-      const absolutePaths = relativePaths.map(relativePath => path.join(outputDir, relativePath));
+      const relativePaths = localNames.map((name) => path.join(resoursesFolderName, name));
+      const absolutePaths = relativePaths.map((relativePath) => path.join(outputDir, relativePath));
       const urlBase = generateUrlBaseFromLink(link);
-      const absoluteUrls = relativeUrls.map(p => [urlBase, p].join('/'));
+      const absoluteUrls = relativeUrls.map((p) => [urlBase, p].join('/'));
 
       nodes = zipWith(
         filteredTags, absoluteUrls, absolutePaths, relativePaths,
@@ -52,7 +52,7 @@ const pageLoader = async (link, outputDir) => {
 
       d('getting resourses content...');
       const resoursesContentPromises = nodes.map(
-        resourse => axios.get(resourse.absoluteUrl)
+        (resourse) => axios.get(resourse.absoluteUrl)
           .then(({ data: resourseContent }) => { // -?-
             resourse.content = resourseContent; // eslint-disable-line no-param-reassign
           }),
@@ -75,7 +75,7 @@ const pageLoader = async (link, outputDir) => {
     })
     .then(() => {
       d('creating files...');
-      const writeFilePromises = nodes.map(node => fs.writeFile(node.absolutePath, node.content));
+      const writeFilePromises = nodes.map((node) => fs.writeFile(node.absolutePath, node.content));
       return Promise.all(writeFilePromises);
     })
     .catch((e) => {
